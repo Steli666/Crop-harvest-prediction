@@ -4,7 +4,7 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import GradientBoostingRegressor
 import pandas as pd
 
 data = pd.read_csv("crop_yield.csv")
@@ -21,19 +21,17 @@ preprocessor = ColumnTransformer(
         ('num', SimpleImputer(strategy='mean'), ['Rainfall_mm', 'Temperature_Celsius', 'Days_to_Harvest'])
     ])
 
-model_rf = Pipeline(steps=[
+model_gb = Pipeline(steps=[
     ('preprocessor', preprocessor),
-    ('regressor', RandomForestRegressor(n_estimators=100, random_state=42))
+    ('regressor', GradientBoostingRegressor(n_estimators=100, random_state=42))
 ])
-
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-model_rf.fit(X_train, y_train)
+model_gb.fit(X_train, y_train)
 
-y_pred_rf = model_rf.predict(X_test)
+y_pred_gb = model_gb.predict(X_test)
 
-mse_rf = mean_squared_error(y_test, y_pred_rf)
-r2_rf = r2_score(y_test, y_pred_rf)
-
-print(f'Mean Squared Error (Random Forest): {mse_rf}')
-print(f'R-squared (Random Forest): {r2_rf}')
+mse_gb = mean_squared_error(y_test, y_pred_gb)
+r2_gb = r2_score(y_test, y_pred_gb)
+print(f'Mean Squared Error (Gradient Boosting): {mse_gb}')
+print(f'R-squared (Gradient Boosting): {r2_gb}')
